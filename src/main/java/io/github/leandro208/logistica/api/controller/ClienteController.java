@@ -3,7 +3,7 @@ package io.github.leandro208.logistica.api.controller;
 
 import java.util.List;
 
-import javax.websocket.server.PathParam;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,13 +44,13 @@ public class ClienteController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente adcionar(@RequestBody Cliente cliente) {
+	public Cliente adcionar(@Valid @RequestBody Cliente cliente) {
 		return clienteReposiory.save(cliente);
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Cliente> atualizar(@PathVariable Long id,
-			@RequestBody Cliente cliente){
+			@Valid @RequestBody Cliente cliente){
 		if(!clienteReposiory.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
