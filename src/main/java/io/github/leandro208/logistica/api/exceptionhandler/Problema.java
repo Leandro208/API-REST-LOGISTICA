@@ -3,6 +3,10 @@ package io.github.leandro208.logistica.api.exceptionhandler;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class Problema {
 
 	private Integer status;
@@ -12,10 +16,9 @@ public class Problema {
 	private List<Campo> campo;
 	
 	public static class Campo {
+		
 		private String nome;
 		private String mensagem;
-		
-		
 		
 		public Campo(String nome, String mensagem) {
 			this.nome = nome;

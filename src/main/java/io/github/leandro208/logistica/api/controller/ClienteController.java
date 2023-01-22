@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,16 +19,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.leandro208.logistica.domain.model.Cliente;
 import io.github.leandro208.logistica.domain.repository.ClienteRepository;
+import io.github.leandro208.logistica.domain.service.ClienteService;
 
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
 
+	private ClienteService service;
 	
-	
-	@Autowired
 	private ClienteRepository clienteReposiory;
 	
+	public ClienteController(ClienteService service, ClienteRepository clienteReposiory) {
+		this.service = service;
+		this.clienteReposiory = clienteReposiory;
+	}
+
 	@GetMapping
 	public List<Cliente> listar() {
 		return clienteReposiory.findAll();
@@ -45,7 +49,7 @@ public class ClienteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente adcionar(@Valid @RequestBody Cliente cliente) {
-		return clienteReposiory.save(cliente);
+		return service.salvar(cliente);
 	}
 	
 	@PutMapping("/{id}")
@@ -55,8 +59,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		cliente.setId(id);
-		cliente =  clienteReposiory.save(cliente);
-		
+		cliente =  service.salvar(cliente);
 		return ResponseEntity.ok(cliente);
 	}
 	
@@ -65,8 +68,7 @@ public class ClienteController {
 		if(!clienteReposiory.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
-		
-		clienteReposiory.deleteById(id);
+		service.excluir(id);
 		 return ResponseEntity.noContent().build();
 	}
 }
