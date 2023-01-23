@@ -1,6 +1,6 @@
 package io.github.leandro208.logistica.domain.service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +21,6 @@ public class EntregaService {
 		this.clienteService = clienteService;
 	}
 
-
-
 	@Transactional
 	public Entrega solicitar(Entrega entrega) {
 		
@@ -30,7 +28,7 @@ public class EntregaService {
 		
 		entrega.setCliente(cliente);
 		entrega.setStatus(StatusEntrega.PENDENTE);
-		entrega.setDataPedido(LocalDateTime.now());
+		entrega.setDataPedido(OffsetDateTime.now());
 		return entregaRepository.save(entrega);
 	}
 	
