@@ -17,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import io.github.leandro208.logistica.domain.exception.NegocioException;
+
 
 @Entity
 public class Entrega {
@@ -133,6 +135,19 @@ public class Entrega {
 		
 		this.getOcorrencias().add(ocorrencia);
 		return ocorrencia;
+	}
+
+	public void finalizar() {
+		if(!podeSerFinalizada()) {
+			throw new NegocioException("Entrega não pode ser finalizada");
+		}
+		
+		setStatus(StatusEntrega.FINALIZADA);
+		setDataFinalizacao(OffsetDateTime.now());
+	}
+	
+	public Boolean podeSerFinalizada() {
+		return StatusEntrega.PENDENTE.equals(getStatus());
 	}
 
 }

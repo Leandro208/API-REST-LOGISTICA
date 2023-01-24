@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,18 +21,21 @@ import io.github.leandro208.logistica.api.dto.input.EntregaInput;
 import io.github.leandro208.logistica.domain.model.Entrega;
 import io.github.leandro208.logistica.domain.repository.EntregaRepository;
 import io.github.leandro208.logistica.domain.service.EntregaService;
+import io.github.leandro208.logistica.domain.service.FinalizacaoEntregaService;
 
 @RestController
 @RequestMapping("/entregas")
 public class EntregaController {
 
 	private EntregaService entregaService;
+	private FinalizacaoEntregaService finalizacaoEntregaService;
 	private EntregaRepository entregaRepository;
 	private EntregaAssembler entregaAssembler;
 
-	public EntregaController(EntregaService entregaService, EntregaRepository entregaRepository,
-			EntregaAssembler entregaAssembler) {
+	public EntregaController(EntregaService entregaService, FinalizacaoEntregaService finalizacaoEntregaService,
+			EntregaRepository entregaRepository, EntregaAssembler entregaAssembler) {
 		this.entregaService = entregaService;
+		this.finalizacaoEntregaService = finalizacaoEntregaService;
 		this.entregaRepository = entregaRepository;
 		this.entregaAssembler = entregaAssembler;
 	}
@@ -54,5 +58,11 @@ public class EntregaController {
 		return entregaRepository.findById(id)
 				.map(entrega ->ResponseEntity.ok(entregaAssembler.toModel(entrega)))
 				.orElse(ResponseEntity.notFound().build());
+	}
+	
+	@PutMapping("/{entregaId}/finalizacao")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void finalizar(@PathVariable Long entregaId) {
+		finalizacaoEntregaService.finalizar(entregaId);
 	}
 }
